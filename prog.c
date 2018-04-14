@@ -31,7 +31,7 @@ DOUBLE infinite_norm_diff(DOUBLE *vec1, DOUBLE *vec2, int n){
  *   que x0 deve ser o vetor nulo.
  * O vetor solução é retornado.
  */
-DOUBLE *gauss_seidel(DOUBLE A[][2], DOUBLE *b, int n, DOUBLE eps, int itmax, DOUBLE *x0){
+DOUBLE *gauss_seidel(DOUBLE **A, DOUBLE *b, int n, DOUBLE eps, int itmax, DOUBLE *x0){
 	int i, j, it;
 
 	// Alocar vetor de soluções a cada iteração
@@ -72,8 +72,6 @@ DOUBLE *gauss_seidel(DOUBLE A[][2], DOUBLE *b, int n, DOUBLE eps, int itmax, DOU
 			xk[i] = acc;
 		}
 		
-		printf("x%d: (%lf, %lf)\n", it, xk[0], xk[1]);
-
 		// Verificamos a norma infinita
 		DOUBLE norm = infinite_norm_diff(xk, xlast, n);
 		if(norm <= eps) break;;
@@ -82,19 +80,41 @@ DOUBLE *gauss_seidel(DOUBLE A[][2], DOUBLE *b, int n, DOUBLE eps, int itmax, DOU
 	return xk;
 }
 
+void teste_letraB(int n){
+	int i, j;
+
+	printf("\n\nRealizando teste letra b) com n = %d\n", n);
+
+	// Cria matrizes A e b
+	DOUBLE *A[n];
+	DOUBLE AA[n][n];
+	DOUBLE b[n];
+	for(i = 0; i < n; i++) A[i] = (double *) AA[i];
+
+	// Preenche matriz A e b, a_ii = i*i, todo o resto é 0
+	for(i = 0; i < n; i++){
+		DOUBLE bsum = 0;
+		for(j = 0; j < n; j++){
+			if(i == j) A[i][j] = i*i + 1;
+			else A[i][j] = 0;
+			bsum += A[i][j];
+		}
+		b[i] = bsum;
+	}
+	
+	DOUBLE *ret = gauss_seidel(A, b, n, 1E-10, 500, NULL);
+
+	printf("Resultado: ( ");
+	for(i = 0; i < n; i++) printf("%lf ", ret[i]);
+	printf(")\n");
+
+	free(ret);
+}
+
+
+
 int main(int argc, char *argv[]){
-	double A[][2] = {{2, 1}, {3, 4}};
-	double b[] = {1, -1};
-	int n = 2;
-	int itmax = 50;
-	double eps = 0.001;
-
-	double *res = gauss_seidel(A, b, n, eps, itmax, NULL);
-
-	printf("Expected: (%lf, %lf)\n", 1.0, -1.0);
-	printf("We got:   (%lf, %lf)\n", res[0], res[1]);
-
-	free(res);
-
+	teste_letraB(50);
+	teste_letraB(100);
 	return 0;
 }
