@@ -95,14 +95,18 @@ void teste_letraB(int n){
 	for(i = 0; i < n; i++){
 		DOUBLE bsum = 0;
 		for(j = 0; j < n; j++){
-			if(i == j) A[i][j] = i*i + 1;
+			if(i == j)   A[i][j] =  4;
+			else if(i+1 == j) A[i][j] = -1;
+			else if(i == j+1) A[i][j] = -1;
+			else if(i+3 == j) A[i][j] = -1;
+			else if(i == j+3) A[i][j] = -1;
 			else A[i][j] = 0;
 			bsum += A[i][j];
 		}
 		b[i] = bsum;
 	}
 	
-	DOUBLE *ret = gauss_seidel(A, b, n, 1E-10, 500, NULL);
+	DOUBLE *ret = gauss_seidel(A, b, n, 1E-10, 500000, NULL);
 
 	printf("Resultado: ( ");
 	for(i = 0; i < n; i++) printf("%lf ", ret[i]);
