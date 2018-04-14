@@ -1,7 +1,30 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 #define DOUBLE double
+
+// Retorna a norma infinita de um vetor
+DOUBLE infinite_norm(DOUBLE *vec, int n){
+	int i;
+	DOUBLE max = fabs(vec[0]);
+	for(i = 1; i < n; i++){
+		DOUBLE elem = fabs(vec[i]);
+		if(elem > max) max = elem;
+	}
+	return max;
+}
+
+// Retorna a norma infinita de vec1 - vec2
+DOUBLE infinite_norm_diff(DOUBLE *vec1, DOUBLE *vec2, int n){
+	int i;
+	DOUBLE max = fabs(vec1[0] - vec2[0]);
+	for(i = 1; i < n; i++){
+		DOUBLE elem = fabs(vec1[i] - vec2[i]);
+		if(elem > max) max = elem;
+	}
+	return max;
+}
 
 /* Resolve o sistema A.x = b utilizando o método de Gauss-Seidel.
  * A aproximação inicial deve estar em 'x0'. Se 'x0' for NULL, assumimos
@@ -13,6 +36,9 @@ DOUBLE *gauss_seidel(DOUBLE A[][2], DOUBLE *b, int n, DOUBLE eps, int itmax, DOU
 
 	// Alocar vetor de soluções a cada iteração
 	DOUBLE *xk = (DOUBLE *) malloc(sizeof(DOUBLE) * n);
+
+	// Alocar vetor de soluções da iteração anterior
+	DOUBLE xlast[n];
 
 	if(x0 == NULL) // Inicializar xk
 		for(i = 0; i < n; i++) xk[i] = 0;
@@ -39,11 +65,18 @@ DOUBLE *gauss_seidel(DOUBLE A[][2], DOUBLE *b, int n, DOUBLE eps, int itmax, DOU
 			// Divisão final
 			acc /= A[i][i];
 
+			// Colocamos a solução atual como solução anterior
+			xlast[i] = xk[i];
+
 			// Finalmente, x_k <- x_(k+1)
 			xk[i] = acc;
 		}
-
+		
 		printf("x%d: (%lf, %lf)\n", it, xk[0], xk[1]);
+
+		// Verificamos a norma infinita
+		DOUBLE norm = infinite_norm_diff(xk, xlast, n);
+		if(norm <= eps) break;;
 	}
 
 	return xk;
@@ -54,7 +87,7 @@ int main(int argc, char *argv[]){
 	double b[] = {1, -1};
 	int n = 2;
 	int itmax = 50;
-	double eps = 1E-10;
+	double eps = 0.001;
 
 	double *res = gauss_seidel(A, b, n, eps, itmax, NULL);
 
