@@ -1,16 +1,20 @@
 function x = gaussSeidel(A, x0, b, maxError = 1.0e-3, maxIterations = 1000)
 	#format long PRECISA COLOCAR NA HORA DE PRINTAR
 
-	x = x0;	
-	xNew = x;
+	x = xNew = x0;		
+	n = size(A, 1);	
 	err = maxError + 1;
+	aux1 = aux2 = zeros(1, n);		
 	l = 0;
-	n = size(A, 1)
+	
 	while(l < maxIterations && err > maxError)
-
-		for i = 1:n
-			aux1 = dot(A(i,:), xNew, i-1);
-			aux2 = dot(A(i,i+1:n), xNew(i+1:n));
+		for i = 1:n			
+			if (i > 1)
+				aux1(i) = dot(A(i, 1:i-1), xNew(1:i-1));
+			else
+				aux1(i) = 0;
+			endif
+			aux2(i) = dot(A(i,i+1:n), xNew(i+1:n));
 			xNew(i) = (b(i) - aux1(i) - aux2(i))./A(i,i);
 		endfor
 
@@ -20,5 +24,5 @@ function x = gaussSeidel(A, x0, b, maxError = 1.0e-3, maxIterations = 1000)
 		i++;
 	endwhile
 
-	return
+	return;
 endfunction
