@@ -11,6 +11,13 @@ function x = gaussSeidel(A, x0, b, maxError = 1.0e-6, maxIterations = 10000)
 	% Variável contadora de iteração.
 	k = 0;
 
+	% Cálculo da Norma (aux) que será utilizada para a estimativa
+	% correta do erro em cada iteração, utilizando-se da Matriz C
+	% de iteração do método, resultante da decomposição da Matriz 
+	% A em L, D e U.
+	C = -inv(tril(A,-1) + (diag(diag(A)))) * triu(A, 1);
+	aux = norm(C, OPT=inf)/(1-norm(C, OPT=inf));
+	
 	% Inicia as iterações do método numérico.
 	while(k < maxIterations && err > maxError)
 		% Calcula cada elemento de x(k+1).
@@ -29,7 +36,7 @@ function x = gaussSeidel(A, x0, b, maxError = 1.0e-6, maxIterations = 10000)
 		endfor
 
 		% Calcula o erro Norma Infinita.
-		err = norm(xNew - x, OPT=inf);
+		err = aux * norm(xNew - x, OPT=inf);
 
 		% Atribui o valor de x(k+1) como nova aproximação para x.
 		x = xNew;
