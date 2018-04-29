@@ -22,5 +22,5 @@ A = pentadiag(n);
 x0 = zeros(1, n);
 b = 1./(1:n); % O vetor b é o inverso do índice de sua respectiva posição.
 maxError = 1e-10; % Máximo erro da norma infinita em uma iteração do método.
-maxIterations = 1e+99; % Nº máximo de iteração alto para garantir o erro máximo especificado.
+maxIterations = 1e+99; % Valor elevado a fim de garantir o erro máximo dado.
 x = gaussSeidel(A, x0, b, maxError)'
