@@ -8,7 +8,7 @@ A = pentadiag(n); % Matriz Pentadiagonal A.
 x0 = zeros(1, n); % Aproximação inicial para o vetor x.
 b = sum(A, 2)'; % O vetor b é o somatório das linhas de A.
 x = gaussSeidel(A, x0, b)' % Aplicando o método numérico de Gauss-Seidel.
-err = norm(A*x-b', OPT=inf) % Erro norma infinita de Ax-b
+err = norm(A*x-b', OPT=inf) % Erro norma infinita de Ax-b.
 
 disp("Teste 2-b)");
 n = 100;
