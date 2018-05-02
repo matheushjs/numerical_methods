@@ -15,7 +15,7 @@ function x = gaussSeidel(A, x0, b, maxError = 1.0e-6, maxIterations = 10000)
 	% correta do erro em cada iteração, utilizando-se da Matriz C
 	% de iteração do método, resultante da decomposição da Matriz 
 	% A em L, D e U.
-	C = -inv(tril(A,-1) + (diag(diag(A)))) * triu(A, 1);
+	C = -inv(tril(A,-1) + (diag(diag(A)))) * triu(A, 1);	
 	aux = norm(C, OPT=inf)/(1-norm(C, OPT=inf));
 	
 	% Inicia as iterações do método numérico.
